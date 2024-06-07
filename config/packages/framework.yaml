@@ -6,6 +6,15 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # a voir si on le garde
+    serializer:
+        enabled: true
+        default_context:
+            groups: ['user:read']
+
+    # --------------------------------
+
+    
     #esi: true
     #fragments: true
 

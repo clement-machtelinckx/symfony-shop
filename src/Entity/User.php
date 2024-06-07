@@ -2,13 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['user:read'],
+    ],
+    denormalizationContext: [
+        'groups' => ['user:write']
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,9 +27,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $username = null;
 
     /**
@@ -33,6 +45,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?string $country = null;
+
+    #[ORM\Column]
+    #[Groups(['user:write'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read', 'user:write'])]
+    private ?Commands $command = null;
+
+    public function __construct()
+    {
+        $this->setRoles(['ROLE_USER']);
+        $this->setCreatedAt(new \DateTimeImmutable());
+    }
 
     public function getId(): ?int
     {
@@ -128,6 +170,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get the value of username
-     */ 
+     */
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCommand(): ?Commands
+    {
+        return $this->command;
+    }
+
+    public function setCommand(?Commands $command): static
+    {
+        $this->command = $command;
+
+        return $this;
+    } 
 
 }
