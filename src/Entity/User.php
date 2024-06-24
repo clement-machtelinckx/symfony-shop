@@ -68,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     #[Groups(['user:read', 'user:write'])]
-    private ?Commands $command = null;
+    private ?Command $command = null;
 
     public function __construct()
     {

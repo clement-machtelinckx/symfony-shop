@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\ArticlesRepository;
+use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ArticlesRepository::class)]
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
 
 #[ApiResource(
     normalizationContext: [
@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'groups' => ['article:write']
     ]
 )]
-class Articles
+class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -45,7 +45,7 @@ class Articles
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'article')]
-    private ?Commands $commands = null;
+    private ?Command $command = null;
 
     public function __construct()
     {
@@ -117,14 +117,14 @@ class Articles
         return $this;
     }
 
-    public function getCommands(): ?Commands
+    public function getCommands(): ?Command
     {
-        return $this->commands;
+        return $this->command;
     }
 
-    public function setCommands(?Commands $commands): static
+    public function setCommands(?Command $command): static
     {
-        $this->commands = $commands;
+        $this->command = $command;
 
         return $this;
     }

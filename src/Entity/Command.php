@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\CommandsRepository;
+use App\Repository\CommandRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommandsRepository::class)]
+#[ORM\Entity(repositoryClass: CommandRepository::class)]
 #[ApiResource]
-class Commands
+class Command
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,9 +30,9 @@ class Commands
     private ?User $user = null;
 
     /**
-     * @var Collection<int, Articles>
+     * @var Collection<int, Article>
      */
-    #[ORM\OneToMany(targetEntity: Articles::class, mappedBy: 'commands')]
+    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'command')]
     private Collection $article;
 
     #[ORM\Column]
@@ -108,14 +108,14 @@ class Commands
     }
 
     /**
-     * @return Collection<int, Articles>
+     * @return Collection<int, Article>
      */
     public function getArticle(): Collection
     {
         return $this->article;
     }
 
-    public function addArticle(Articles $article): static
+    public function addArticle(Article $article): static
     {
         if (!$this->article->contains($article)) {
             $this->article->add($article);
@@ -125,7 +125,7 @@ class Commands
         return $this;
     }
 
-    public function removeArticle(Articles $article): static
+    public function removeArticle(Article $article): static
     {
         if ($this->article->removeElement($article)) {
             // set the owning side to null (unless already changed)

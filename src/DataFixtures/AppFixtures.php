@@ -3,8 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Entity\Articles;
-use App\Entity\Commands;
+use App\Entity\Article;
+use App\Entity\Command;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -15,7 +15,7 @@ class AppFixtures extends Fixture
 
         // crée 100 articles fictifs
         for ($i = 0; $i < 100; $i++) {
-            $articles = new Articles();
+            $articles = new Article();
             $articles->setName('Article '.$i);
             $articles->setPrice(rand(1, 100));
             $articles->setWeight(rand(1, 100));
